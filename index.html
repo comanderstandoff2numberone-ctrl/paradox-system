@@ -1,0 +1,95 @@
+# paradox-system
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система Парадокса</title>
+    <style>
+        body {
+            background-color: #05050a;
+            color: #e0e0ff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .login-card {
+            background: rgba(10, 10, 25, 0.8);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
+            border: 1px solid #00bfff;
+            text-align: center;
+            width: 320px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #00bfff;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            background: #101026;
+            border: 1px solid #3d3d75;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus {
+            border-color: #00bfff;
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #00bfff, #8a2be2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h1>Система Парадокса</h1>
+        <input type="password" id="accessKey" placeholder="Введите ключ доступа">
+        <button onclick="checkKey()">Войти в систему</button>
+    </div>
+
+    <script>
+        function checkKey() {
+            const key = document.getElementById('accessKey').value;
+            // Твой секретный пароль. Можешь заменить '1234' на любой свой!
+            if (key === '1234') {
+                alert('Доступ разрешен! Системы Парадокса активированы.');
+                // Сюда мы позже добавим переход в твой 3D космос
+            } else {
+                alert('Неверный ключ доступа. Система заблокирована.');
+            }
+        }
+    </script>
+
+</body>
+</html>
