@@ -1,95 +1,130 @@
-# paradox-system
+i# paradox-system
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Система Парадокса</title>
+    <title>Система Парадокса — Ядро</title>
     <style>
-        body {
-            background-color: #05050a;
-            color: #e0e0ff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: #010103;
+            font-family: 'Segoe UI', sans-serif; color: #fff;
         }
-        .login-card {
-            background: rgba(10, 10, 25, 0.8);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
-            border: 1px solid #00bfff;
-            text-align: center;
-            width: 320px;
-            backdrop-filter: blur(10px);
+        /* Окна интерфейса внутри Черной Дыры */
+        .blackhole-interior {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; background: #000; z-index: 10;
         }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #00bfff;
-            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        /* Диалоговое окно Зено справа */
+        .zeno-dialog-box {
+            position: absolute; right: 5%; top: 30%; width: 300px;
+            background: rgba(15, 5, 25, 0.85); border: 2px solid #ff00ff;
+            border-radius: 15px; padding: 20px; box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+            display: none; z-index: 20; text-align: center;
         }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            background: #101026;
-            border: 1px solid #3d3d75;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 16px;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
+        .zeno-name { font-weight: bold; color: #ff00ff; margin-bottom: 10px; text-transform: uppercase; }
+        .zeno-btn {
+            background: #ff00ff; color: #000; border: none; padding: 8px 15px;
+            border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px;
         }
-        input:focus {
-            border-color: #00bfff;
-            box-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
+        /* Стандартный экран авторизации */
+        .auth-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #08081a 0%, #010103 100%);
+            display: flex; justify-content: center; align-items: center; z-index: 100;
         }
-        button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(45deg, #00bfff, #8a2be2);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
+        .auth-card {
+            background: rgba(4, 4, 12, 0.9); padding: 40px; border-radius: 20px;
+            border: 1px solid rgba(0, 255, 128, 0.3); text-align: center; width: 300px;
         }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
-        }
+        input { width: 100%; padding: 14px; margin-bottom: 20px; background: #050510; border: 1px solid #1a1a3a; color: #fff; text-align: center; border-radius: 10px;}
+        button { width: 100%; padding: 14px; background: linear-gradient(45deg, #00ff80, #00bfff); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <h1>Система Парадокса</h1>
-        <input type="password" id="accessKey" placeholder="Введите ключ доступа">
-        <button onclick="checkKey()">Войти в систему</button>
+    <!-- Экран авторизации -->
+    <div class="auth-overlay" id="authScreen">
+        <div class="auth-card">
+            <h1>Система Парадокса</h1>
+            <input type="password" id="secretKey" placeholder="Введите ключ доступа">
+            <button onclick="login()">Инициализировать</button>
+        </div>
+    </div>
+
+    <!-- Внутренний мир Черной Дыры -->
+    <div class="blackhole-interior" id="bhInterior">
+        <!-- Сюда в следующих шагах встанут полки и свиток -->
+        <div style="position:absolute; left: 5%; top: 5%; color: #00ff80;">[ ЛАБОРАТОРИЯ ХРОНИК: СТАТИЧНАЯ ЗОНА ]</div>
+
+        <!-- Окно диалогов Зено -->
+        <div class="zeno-dialog-box" id="zenoSpeechBubble">
+            <div class="zeno-name">Зено (Владыка Всего)</div>
+            <div id="zenoText">...</div>
+            <button class="zeno-btn" onclick="closeZenoDialog()">Понятно</button>
+        </div>
     </div>
 
     <script>
-        function checkKey() {
-            const key = document.getElementById('accessKey').value;
-            // Твой секретный пароль. Можешь заменить '1234' на любой свой!
+        // База вопросов Зено про Парадокса (Шанс 65% при входе)
+        const zenoQuestionsAboutParadox = [
+            "Слушай, а Парадокс там снаружи всё еще грустит из-за бесконечного расширения космоса? Передай ему, что шрамы его красят!",
+            "Почему Парадокс не заходит к нам? Он всё еще пытается взломать твои шифры? Скажи ему, пусть не злится, хи-хи!",
+            "Ой, а ты видел, как ярко сегодня светятся зеленые нули и единицы в царапинах Парадокса? Это потому что ты создал новый мир?",
+            "Парадокс думает, что он самый умный со своим цифровым порядком... Но мы-то знаем, кто тут Создатель, да?"
+        ];
+
+        // Симуляция планет для теста бильярда (Размеры в млн кв. км)
+        // В будущем эти данные будут создаваться из твоих оценок в блокноте!
+        const myPlanets = [
+            { name: "Плохой Фильм 1", size: 1.2 }, // Пойдет Зено без спроса (1-3 млн)
+            { name: "Средний Сериал 1", size: 4.5 }, // Зено будет просить разрешение (4-6 млн)
+            { name: "Шедевр Аниме", size: 9.0 } // Крупная, Зено её боится
+        ];
+
+        function login() {
+            const key = document.getElementById('secretKey').value;
             if (key === '1234') {
-                alert('Доступ разрешен! Системы Парадокса активированы.');
-                // Сюда мы позже добавим переход в твой 3D космос
+                document.getElementById('authScreen').style.display = 'none';
+                enterBlackHole(); // Прямиком заходим в Черную Дыру для проверки Зено
             } else {
-                alert('Неверный ключ доступа. Система заблокирована.');
+                alert('Доступ закрыт.');
             }
         }
-    </script>
 
+        function enterBlackHole() {
+            document.getElementById('bhInterior').style.display = 'block';
+            
+            // Запуск ИИ-логики Зено при входе
+            setTimeout(() => {
+                triggerZenoLogic();
+            }, 1500); // Зено берет паузу после партии в бильярд и говорит
+        }
+
+        function triggerZenoLogic() {
+            const bubble = document.getElementById('zenoSpeechBubble');
+            const textZone = document.getElementById('zenoText');
+            
+            // Роллим шанс 65%
+            const roll = Math.random() * 100;
+            
+            if (roll <= 65) {
+                // Выбираем случайный глубокий вопрос о Парадоксе
+                const randomQuestion = zenoQuestionsAboutParadox[Math.floor(Math.random() * zenoQuestionsAboutParadox.length)];
+                textZone.innerText = randomQuestion;
+                bubble.style.display = 'block';
+            } else {
+                // Если 65% не выпало, Зено просит среднюю планету (размер 4-6) или комментирует бильярд
+                textZone.innerText = "Хэй! Я тут посмотрел на твои планеты... А можно мне поиграть вон той, которая размером " + myPlanets[1].size + " миллиона квадратных километров? Ну пожааалуйста!";
+                bubble.style.display = 'block';
+            }
+        }
+
+        function closeZenoDialog() {
+            document.getElementById('zenoSpeechBubble').style.display = 'none';
+            // Тут Зено по лору берет кий и снова начинает циклично играть в бильярд
+        }
+    </script>
 </body>
 </html>
