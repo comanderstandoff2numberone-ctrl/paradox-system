@@ -1,130 +1,111 @@
-i# paradox-system
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Система Парадокса — Ядро</title>
-    <style>
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: #010103;
-            font-family: 'Segoe UI', sans-serif; color: #fff;
-        }
-        /* Окна интерфейса внутри Черной Дыры */
-        .blackhole-interior {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; background: #000; z-index: 10;
-        }
-        /* Диалоговое окно Зено справа */
-        .zeno-dialog-box {
-            position: absolute; right: 5%; top: 30%; width: 300px;
-            background: rgba(15, 5, 25, 0.85); border: 2px solid #ff00ff;
-            border-radius: 15px; padding: 20px; box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
-            display: none; z-index: 20; text-align: center;
-        }
-        .zeno-name { font-weight: bold; color: #ff00ff; margin-bottom: 10px; text-transform: uppercase; }
-        .zeno-btn {
-            background: #ff00ff; color: #000; border: none; padding: 8px 15px;
-            border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px;
-        }
-        /* Стандартный экран авторизации */
-        .auth-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, #08081a 0%, #010103 100%);
-            display: flex; justify-content: center; align-items: center; z-index: 100;
-        }
-        .auth-card {
-            background: rgba(4, 4, 12, 0.9); padding: 40px; border-radius: 20px;
-            border: 1px solid rgba(0, 255, 128, 0.3); text-align: center; width: 300px;
-        }
-        input { width: 100%; padding: 14px; margin-bottom: 20px; background: #050510; border: 1px solid #1a1a3a; color: #fff; text-align: center; border-radius: 10px;}
-        button { width: 100%; padding: 14px; background: linear-gradient(45deg, #00ff80, #00bfff); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-    </style>
-</head>
-<body>
-
-    <!-- Экран авторизации -->
-    <div class="auth-overlay" id="authScreen">
-        <div class="auth-card">
-            <h1>Система Парадокса</h1>
-            <input type="password" id="secretKey" placeholder="Введите ключ доступа">
-            <button onclick="login()">Инициализировать</button>
-        </div>
-    </div>
-
-    <!-- Внутренний мир Черной Дыры -->
-    <div class="blackhole-interior" id="bhInterior">
-        <!-- Сюда в следующих шагах встанут полки и свиток -->
-        <div style="position:absolute; left: 5%; top: 5%; color: #00ff80;">[ ЛАБОРАТОРИЯ ХРОНИК: СТАТИЧНАЯ ЗОНА ]</div>
-
-        <!-- Окно диалогов Зено -->
-        <div class="zeno-dialog-box" id="zenoSpeechBubble">
-            <div class="zeno-name">Зено (Владыка Всего)</div>
-            <div id="zenoText">...</div>
-            <button class="zeno-btn" onclick="closeZenoDialog()">Понятно</button>
-        </div>
-    </div>
-
-    <script>
-        // База вопросов Зено про Парадокса (Шанс 65% при входе)
-        const zenoQuestionsAboutParadox = [
-            "Слушай, а Парадокс там снаружи всё еще грустит из-за бесконечного расширения космоса? Передай ему, что шрамы его красят!",
-            "Почему Парадокс не заходит к нам? Он всё еще пытается взломать твои шифры? Скажи ему, пусть не злится, хи-хи!",
-            "Ой, а ты видел, как ярко сегодня светятся зеленые нули и единицы в царапинах Парадокса? Это потому что ты создал новый мир?",
-            "Парадокс думает, что он самый умный со своим цифровым порядком... Но мы-то знаем, кто тут Создатель, да?"
-        ];
-
-        // Симуляция планет для теста бильярда (Размеры в млн кв. км)
-        // В будущем эти данные будут создаваться из твоих оценок в блокноте!
-        const myPlanets = [
-            { name: "Плохой Фильм 1", size: 1.2 }, // Пойдет Зено без спроса (1-3 млн)
-            { name: "Средний Сериал 1", size: 4.5 }, // Зено будет просить разрешение (4-6 млн)
-            { name: "Шедевр Аниме", size: 9.0 } // Крупная, Зено её боится
-        ];
-
-        function login() {
-            const key = document.getElementById('secretKey').value;
-            if (key === '1234') {
-                document.getElementById('authScreen').style.display = 'none';
-                enterBlackHole(); // Прямиком заходим в Черную Дыру для проверки Зено
-            } else {
-                alert('Доступ закрыт.');
-            }
-        }
-
-        function enterBlackHole() {
+paradox-system 
+<script>
+    // --- ВХОД ---
+    function login() {
+        const key = document.getElementById('secretKey').value;
+        if (key === '1234') {
+            document.getElementById('authScreen').style.display = 'none';
             document.getElementById('bhInterior').style.display = 'block';
             
-            // Запуск ИИ-логики Зено при входе
-            setTimeout(() => {
-                triggerZenoLogic();
-            }, 1500); // Зено берет паузу после партии в бильярд и говорит
+            // Запускаем космос с задержкой, чтобы интерфейс успел прогрузиться
+            setTimeout(createUniverse, 100);
+        } else {
+            alert('Ключ неверен.');
         }
+    }
 
-        function triggerZenoLogic() {
-            const bubble = document.getElementById('zenoSpeechBubble');
-            const textZone = document.getElementById('zenoText');
-            
-            // Роллим шанс 65%
-            const roll = Math.random() * 100;
-            
-            if (roll <= 65) {
-                // Выбираем случайный глубокий вопрос о Парадоксе
-                const randomQuestion = zenoQuestionsAboutParadox[Math.floor(Math.random() * zenoQuestionsAboutParadox.length)];
-                textZone.innerText = randomQuestion;
-                bubble.style.display = 'block';
-            } else {
-                // Если 65% не выпало, Зено просит среднюю планету (размер 4-6) или комментирует бильярд
-                textZone.innerText = "Хэй! Я тут посмотрел на твои планеты... А можно мне поиграть вон той, которая размером " + myPlanets[1].size + " миллиона квадратных километров? Ну пожааалуйста!";
-                bubble.style.display = 'block';
-            }
-        }
+    // --- СОЗДАНИЕ КОСМОСА (Универсальный способ) ---
+    function createUniverse() {
+        const container = document.getElementById('bhInterior');
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const size = Math.min(window.innerWidth, window.innerHeight); // Берем меньшую сторону экрана
 
-        function closeZenoDialog() {
-            document.getElementById('zenoSpeechBubble').style.display = 'none';
-            // Тут Зено по лору берет кий и снова начинает циклично играть в бильярд
+        // 1. Черная дыра (по центру)
+        const bh = document.createElement('div');
+        bh.style.cssText = `
+            position: absolute; left: ${centerX}px; top: ${centerY}px;
+            width: ${size * 0.2}px; height: ${size * 0.2}px;
+            transform: translate(-50%, -50%); border-radius: 50%;
+            background: radial-gradient(circle, #000 30%, #2a0a4a 60%, #000 100%);
+            box-shadow: 0 0 50px #ff00ff; border: 2px solid #a855f7;
+            display: flex; align-items: center; justify-content: center; 
+            color: #fff; font-size: 16px; font-weight: bold; text-align: center; z-index: 10;
+        `;
+        bh.innerText = 'ЧЕРНАЯ ДЫРА';
+        container.appendChild(bh);
+
+        // 2. Звезды и планеты
+        const systems = ['Аниме', 'Фильмы', 'Сериалы', 'Книги'];
+        const colors = ['#fbbf24', '#3b82f6', '#ef4444', '#10b981'];
+        const orbitRadius = size * 0.3; // Расстояние от центра до звезд
+
+        systems.forEach((name, i) => {
+            const angle = (i / systems.length) * Math.PI * 2;
+            const x = Math.cos(angle) * orbitRadius;
+            const y = Math.sin(angle) * orbitRadius;
+
+            // Рисуем Звезду
+            const star = document.createElement('div');
+            star.style.cssText = `
+                position: absolute; left: ${centerX + x}px; top: ${centerY + y}px;
+                width: ${size * 0.1}px; height: ${size * 0.1}px;
+                transform: translate(-50%, -50%);
+                background: radial-gradient(circle, #fff, ${colors[i]});
+                border-radius: 50%; box-shadow: 0 0 30px ${colors[i]};
+                display: flex; align-items: center; justify-content: center;
+                font-size: 12px; color: #000; font-weight: bold; z-index: 5;
+            `;
+            star.innerText = name;
+            container.appendChild(star);
+
+            // Рисуем Планету на орбите
+            const planetDist = size * 0.12;
+            const planet = document.createElement('div');
+            planet.style.cssText = `
+                position: absolute; left: ${centerX + x}px; top: ${centerY + y}px;
+                width: ${size * 0.04}px; height: ${size * 0.04}px;
+                background: #a78bfa; border-radius: 50%; border: 1px solid #fff;
+                z-index: 4; 
+                transform-origin: 0px 0px;
+                animation: orbitMove ${10 + i * 2}s linear infinite;
+            `;
+            planet.style.transform = `translate(${planetDist}px, 0px)`; // Стартовое положение
+            container.appendChild(planet);
+        });
+
+        // 3. Зено
+        setTimeout(() => triggerZenoLogic(), 2000);
+    }
+
+    // --- АНИМАЦИЯ ДВИЖЕНИЯ ПЛАНЕТ ---
+    const styleSheet = document.createElement("style");
+    styleSheet.textContent = `
+        @keyframes orbitMove {
+            from { transform: rotate(0deg) translateX(0px); }
+            to { transform: rotate(360deg) translateX(0px); }
         }
-    </script>
-</body>
-</html>
+    `;
+    document.head.appendChild(styleSheet);
+
+    // --- ЛОГИКА ЗЕНО ---
+    const zenoQuestions = [
+        "Парадокс думает, что он самый умный. Но мы-то знаем, кто тут Создатель, да?",
+        "Слушай, а Парадокс там снаружи всё еще грустит?",
+        "Я смотрю, ты новую планету создал. Круто!"
+    ];
+
+    function triggerZenoLogic() {
+        const bubble = document.getElementById('zenoSpeechBubble');
+        const textZone = document.getElementById('zenoText');
+        
+        if (Math.random() * 100 <= 65) {
+            textZone.innerText = zenoQuestions[Math.floor(Math.random() * zenoQuestions.length)];
+            bubble.style.display = 'block';
+        }
+    }
+
+    function closeZenoDialog() {
+        document.getElementById('zenoSpeechBubble').style.display = 'none';
+    }
+        </script>
